@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BatBall - Professional Cricket Scoring</title>
+    <link rel="stylesheet" href="batball.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader">
+            <div class="cricket-ball"></div>
+            <h2>BatBall</h2>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-cricket"></i>
+                    <h1>BatBall</h1>
+                </div>
+                <p>Professional Cricket Scoring & Analytics</p>
+            </div>
+            
+            <div class="login-form">
+                <div id="g_id_onload"
+                     data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                     data-callback="handleCredentialResponse"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-size="large"
+                     data-theme="outline"
+                     data-text="sign_in_with"
+                     data-shape="rectangular"
+                     data-logo_alignment="left">
+                </div>
+                
+                <div class="demo-login">
+                    <p>Or try demo mode:</p>
+                    <button id="demo-login" class="demo-btn">
+                        <i class="fas fa-play"></i>
+                        Demo Mode
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="main-app hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="menu-toggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <img id="user-avatar" src="" alt="User" class="user-avatar">
+                    <span id="user-name">User</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <h1>BatBall</h1>
+            </div>
+            <div class="header-right">
+                <button id="settings-btn" class="icon-btn">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button id="logout-btn" class="icon-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu</h3>
+                <button id="close-sidebar" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active">
+                    <a href="#dashboard">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#new-match">
+                        <i class="fas fa-plus-circle"></i>
+                        New Match
+                    </a>
+                </li>
+                <li>
+                    <a href="#live-scoring">
+                        <i class="fas fa-cricket"></i>
+                        Live Scoring
+                    </a>
+                </li>
+                <li>
+                    <a href="#matches">
+                        <i class="fas fa-list"></i>
+                        All Matches
+                    </a>
+                </li>
+                <li>
+                    <a href="#teams">
+                        <i class="fas fa-users"></i>
+                        Teams
+                    </a>
+                </li>
+                <li>
+                    <a href="#players">
+                        <i class="fas fa-user-friends"></i>
+                        Players
+                    </a>
+                </li>
+                <li>
+                    <a href="#statistics">
+                        <i class="fas fa-chart-bar"></i>
+                        Statistics
+                    </a>
+                </li>
+                <li>
+                    <a href="#settings">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <section id="dashboard" class="content-section active">
+                <div class="dashboard-header">
+                    <h2>Dashboard</h2>
+                    <button id="quick-match" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Start New Match
+                    </button>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <i class="fas fa-cricket"></i>
+                            <h3>Live Matches</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="live-matches-list">
+                                <p class="no-data">No live matches</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <i class="fas fa-history"></i>
+                            <h3>Recent Matches</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="recent-matches-list">
+                                <p class="no-data">No recent matches</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <i class="fas fa-trophy"></i>
+                            <h3>Top Teams</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="top-teams-list">
+                                <p class="no-data">No team data</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <i class="fas fa-star"></i>
+                            <h3>Top Players</h3>
+                        </div>
+                        <div class="card-content">
+                            <div id="top-players-list">
+                                <p class="no-data">No player data</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Match -->
+            <section id="new-match" class="content-section">
+                <div class="section-header">
+                    <h2>Create New Match</h2>
+                </div>
+
+                <div class="match-form">
+                    <div class="form-group">
+                        <label for="match-title">Match Title</label>
+                        <input type="text" id="match-title" placeholder="e.g., India vs Australia - T20">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="team1">Team 1</label>
+                            <input type="text" id="team1" placeholder="Team 1 Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="team2">Team 2</label>
+                            <input type="text" id="team2" placeholder="Team 2 Name">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="match-type">Match Type</label>
+                            <select id="match-type">
+                                <option value="t20">T20</option>
+                                <option value="odi">ODI</option>
+                                <option value="test">Test</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="overs">Overs</label>
+                            <input type="number" id="overs" value="20" min="1" max="50">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="venue">Venue</label>
+                        <input type="text" id="venue" placeholder="Stadium Name">
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="create-match" class="btn btn-primary">
+                            <i class="fas fa-play"></i>
+                            Start Match
+                        </button>
+                        <button id="save-draft" class="btn btn-secondary">
+                            <i class="fas fa-save"></i>
+                            Save Draft
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Scoring -->
+            <section id="live-scoring" class="content-section">
+                <div class="scoring-header">
+                    <div class="match-info">
+                        <h2 id="current-match-title">No Active Match</h2>
+                        <div class="match-status">
+                            <span id="match-status">Not Started</span>
+                            <span id="match-venue"></span>
+                        </div>
+                    </div>
+                    <div class="scoring-controls">
+                        <button id="pause-match" class="btn btn-warning" disabled>
+                            <i class="fas fa-pause"></i>
+                            Pause
+                        </button>
+                        <button id="end-match" class="btn btn-danger" disabled>
+                            <i class="fas fa-stop"></i>
+                            End Match
+                        </button>
+                    </div>
+                </div>
+
+                <div class="scoring-container">
+                    <div class="scoreboard">
+                        <div class="team-score" id="team1-score">
+                            <h3 id="team1-name">Team 1</h3>
+                            <div class="score-details">
+                                <span id="team1-runs">0</span>/<span id="team1-wickets">0</span>
+                                <span class="overs">(<span id="team1-overs">0.0</span>)</span>
+                            </div>
+                        </div>
+                        <div class="vs-divider">vs</div>
+                        <div class="team-score" id="team2-score">
+                            <h3 id="team2-name">Team 2</h3>
+                            <div class="score-details">
+                                <span id="team2-runs">0</span>/<span id="team2-wickets">0</span>
+                                <span class="overs">(<span id="team2-overs">0.0</span>)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scoring-panel">
+                        <div class="runs-panel">
+                            <h4>Runs</h4>
+                            <div class="runs-buttons">
+                                <button class="run-btn" data-runs="0">0</button>
+                                <button class="run-btn" data-runs="1">1</button>
+                                <button class="run-btn" data-runs="2">2</button>
+                                <button class="run-btn" data-runs="3">3</button>
+                                <button class="run-btn" data-runs="4">4</button>
+                                <button class="run-btn" data-runs="6">6</button>
+                            </div>
+                        </div>
+
+                        <div class="extras-panel">
+                            <h4>Extras</h4>
+                            <div class="extras-buttons">
+                                <button class="extra-btn" data-extra="wide">Wide</button>
+                                <button class="extra-btn" data-extra="no-ball">No Ball</button>
+                                <button class="extra-btn" data-extra="bye">Bye</button>
+                                <button class="extra-btn" data-extra="leg-bye">Leg Bye</button>
+                            </div>
+                        </div>
+
+                        <div class="wickets-panel">
+                            <h4>Wickets</h4>
+                            <div class="wicket-buttons">
+                                <button class="wicket-btn" data-wicket="bowled">Bowled</button>
+                                <button class="wicket-btn" data-wicket="caught">Caught</button>
+                                <button class="wicket-btn" data-wicket="lbw">LBW</button>
+                                <button class="wicket-btn" data-wicket="run-out">Run Out</button>
+                                <button class="wicket-btn" data-wicket="stumped">Stumped</button>
+                                <button class="wicket-btn" data-wicket="hit-wicket">Hit Wicket</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="current-batsmen">
+                        <h4>Current Batsmen</h4>
+                        <div class="batsmen-inputs">
+                            <div class="batsman-input">
+                                <label>Striker</label>
+                                <input type="text" id="striker" placeholder="Batsman 1">
+                                <span id="striker-runs">0</span>
+                            </div>
+                            <div class="batsman-input">
+                                <label>Non-Striker</label>
+                                <input type="text" id="non-striker" placeholder="Batsman 2">
+                                <span id="non-striker-runs">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="current-bowler">
+                        <h4>Current Bowler</h4>
+                        <div class="bowler-input">
+                            <input type="text" id="bowler" placeholder="Bowler Name">
+                            <span id="bowler-wickets">0</span> wkts
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ball-by-ball">
+                    <h4>Ball by Ball Commentary</h4>
+                    <div id="commentary" class="commentary-list">
+                        <p class="no-data">No balls bowled yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Matches List -->
+            <section id="matches" class="content-section">
+                <div class="section-header">
+                    <h2>All Matches</h2>
+                    <div class="filters">
+                        <select id="match-filter">
+                            <option value="all">All Matches</option>
+                            <option value="live">Live</option>
+                            <option value="completed">Completed</option>
+                            <option value="upcoming">Upcoming</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="matches-list" class="matches-list">
+                    <p class="no-data">No matches found</p>
+                </div>
+            </section>
+
+            <!-- Teams -->
+            <section id="teams" class="content-section">
+                <div class="section-header">
+                    <h2>Teams</h2>
+                    <button id="add-team" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Team
+                    </button>
+                </div>
+
+                <div id="teams-list" class="teams-list">
+                    <p class="no-data">No teams found</p>
+                </div>
+            </section>
+
+            <!-- Players -->
+            <section id="players" class="content-section">
+                <div class="section-header">
+                    <h2>Players</h2>
+                    <button id="add-player" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Player
+                    </button>
+                </div>
+
+                <div id="players-list" class="players-list">
+                    <p class="no-data">No players found</p>
+                </div>
+            </section>
+
+            <!-- Statistics -->
+            <section id="statistics" class="content-section">
+                <div class="section-header">
+                    <h2>Statistics</h2>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <h3>Batting Statistics</h3>
+                        <div id="batting-stats">
+                            <p class="no-data">No batting data</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <h3>Bowling Statistics</h3>
+                        <div id="bowling-stats">
+                            <p class="no-data">No bowling data</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <h3>Team Performance</h3>
+                        <div id="team-stats">
+                            <p class="no-data">No team data</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <h3>Match Summary</h3>
+                        <div id="match-stats">
+                            <p class="no-data">No match data</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings -->
+            <section id="settings" class="content-section">
+                <div class="section-header">
+                    <h2>Settings</h2>
+                </div>
+
+                <div class="settings-form">
+                    <div class="setting-group">
+                        <h3>General Settings</h3>
+                        <div class="setting-item">
+                            <label for="auto-save">Auto Save</label>
+                            <input type="checkbox" id="auto-save" checked>
+                        </div>
+                        <div class="setting-item">
+                            <label for="sound-effects">Sound Effects</label>
+                            <input type="checkbox" id="sound-effects">
+                        </div>
+                        <div class="setting-item">
+                            <label for="theme">Theme</label>
+                            <select id="theme">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="auto">Auto</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Scoring Settings</h3>
+                        <div class="setting-item">
+                            <label for="default-overs">Default Overs</label>
+                            <input type="number" id="default-overs" value="20" min="1" max="50">
+                        </div>
+                        <div class="setting-item">
+                            <label for="wickets-per-innings">Wickets per Innings</label>
+                            <input type="number" id="wickets-per-innings" value="10" min="1" max="10">
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>Account</h3>
+                        <div class="setting-item">
+                            <button id="export-data" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                Export Data
+                            </button>
+                        </div>
+                        <div class="setting-item">
+                            <button id="import-data" class="btn btn-secondary">
+                                <i class="fas fa-upload"></i>
+                                Import Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button id="close-modal" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content" id="modal-content">
+                <!-- Modal content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="batball.js"></script>
+</body>
+</html> 
